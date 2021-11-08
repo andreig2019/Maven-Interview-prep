@@ -29,7 +29,7 @@ def buy(x, bid, vol):
     :param x: the true value of the market
     :param bid: the bid price - can be that of yourself or
     that of an opposing market maker
-    :param vol: the volume traded 
+    :param vol: the volume traded
 
     :return 'sell': the action that another market participant
     takes on your market
@@ -52,7 +52,7 @@ def sell(x, ask, vol):
     :param x: the true value of the market
     :param ask: the ask price - can be that of yourself or
     that of an opposing market maker
-    :param vol: the volume traded 
+    :param vol: the volume traded
 
     :return 'buy': the action that another market participant
     takes on your market
@@ -69,14 +69,14 @@ def sell(x, ask, vol):
 
 def avmarkets(x, function, par, n=3, m=3):
     """
-    Given the 'true' value, the function 
-    and corresponding parameters for the traded markets, 
+    Given the 'true' value, the function
+    and corresponding parameters for the traded markets,
     show the available markets to trade
 
     :param x: the 'true' value of the traded object
     :param function: the utility function traders and interns
     will be making markets on
-    :param par: the parameters corresponding to the type of 
+    :param par: the parameters corresponding to the type of
     function in case
 
     :return markets: the available markets that other
@@ -116,7 +116,7 @@ def hedge(function, par, x):
     :param x: the true value of the market
     :param function: the utility function traders and interns
     will be making markets on
-    :param par: the parameters corresponding to the type of 
+    :param par: the parameters corresponding to the type of
     function in case
     """
     global pnl
@@ -159,14 +159,14 @@ def market(function, par):
 
     :param function: the utility function traders and interns
     will be making markets on
-    :param par: the parameters corresponding to the type of 
+    :param par: the parameters corresponding to the type of
     function in case
 
     :prints the decision of other market participants on your
     markets
     """
-    print('Make me a market on', end =" ")
-    text(function , par)
+    print('Make me a market on', end=" ")
+    text(function, par)
     ut = utility(function, par)
     ba = list(map(int, input().strip().split()))[:4]
     vb, bid, ask, va = ba[0], ba[1], ba[2], ba[3]
@@ -183,13 +183,14 @@ def market(function, par):
     hedge(function, par, x)
     return x
 
-def gameinfo(function, par): 
+
+def gameinfo(function, par):
     """
     Given an utility function and the corresponding parameters
     show the relevant info for the trading game i.e mean, variance
 
     :param function: the utility function
-    :param par: the parameters corresponding to the type of 
+    :param par: the parameters corresponding to the type of
     function in case
 
     :return mean, var(sample): the mean and variance of an
@@ -212,9 +213,10 @@ def text(function, par):
     elif f == 3:
         print('the outcome of a', par, 'sided dice')
     elif f == 4:
-        print('the maximum roll of',par[0],par[1],'-sided dice')
+        print('the maximum roll of', par[0], par[1], '-sided dice')
     elif f == 5:
-        print('the sum of',par[1],'random elements from',par[0])
+        print('the sum of', par[1], 'random elements from', par[0])
+
 
 def utility(function, par):
     return function(par), par, gameinfo(function, par)
@@ -268,7 +270,7 @@ def suma(par):
 v = [1, 2, 3, 4, 5, 6]
 print(meanv(v))
 for i in range(1):
-    k = market(suma, [v,3])
+    k = market(suma, [v, 3])
     print('Outcome was', k)
 
 print('Current position is', pos,

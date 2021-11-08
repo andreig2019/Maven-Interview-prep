@@ -14,6 +14,7 @@ def buy(x, bid, vol):
     :param x: the true value of the market
     :param bid: the bid price - can be that of yourself or
     that of an opposing market maker
+    :param vol: the volume traded 
 
     :return 'sell': the action that another market participant
     takes on your market
@@ -36,6 +37,7 @@ def sell(x, ask, vol):
     :param x: the true value of the market
     :param ask: the ask price - can be that of yourself or
     that of an opposing market maker
+    :param vol: the volume traded 
 
     :return 'buy': the action that another market participant
     takes on your market

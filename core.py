@@ -5,40 +5,81 @@ from time import sleep
 
 avgprice, trades, pnl, pos = 0, 0, 0, 0
 
-def buy(x, bid):
+def buy(x, bid, vol):
+    """
+    Given the 'true' value of the market and the bid price,
+    execute a sell order for another participant
+
+    :param x: the true value of the market
+    :param bid: the bid price - can be that of yourself or 
+    that of an opposing market maker
+
+    :return 'sell': the action that another market participant
+    takes on your market
+    """
     global pnl, pos, avgprice
-    pnl += x - bid
-    pos += 1
+    pnl += (x - bid) * vol
+    pos += vol
     if pos:
-        avgprice = ((pos-1) * avgprice + bid)/pos
+        avgprice = ((pos-vol) * avgprice + bid * vol)/pos
     else:
         avgprice = 0
     return 'sell'
 
 
-def sell(x, ask):
+def sell(x, ask, vol):
+    """
+    Given the 'true' value of the market and the ask price,
+    execute a buy order
+
+    :param x: the true value of the market
+    :param ask: the ask price - can be that of yourself or 
+    that of an opposing market maker
+
+    :return 'buy': the action that another market participant
+    takes on your market
+    """
     global pnl, pos, avgprice
-    pnl += ask - x
-    pos -= 1
+    pnl += (ask - x) * vol
+    pos -= vol
     if pos:
-        avgprice = ((pos+1) * avgprice - ask)/pos
+        avgprice = ((pos+vol) * avgprice - ask * vol)/pos
     else:
         avgprice = 0
     return 'buy'
 
 def avmarkets(x, n = 3):
+    """
+    Given the 'true' value of the market and preferred
+    number of markets, show the available markets to trade
+
+    :param x: the true value of the market
+    :param n: number of available markets - pre-set to 3
+
+    :return markets: the available markets that other
+    participants made - take care of adverse selection!
+    """
     spread = x * 0.2
     markets = []
     for i in range(n):
+        vb = randint(0, 5)
+        va = randint(0, 5)
         bid = uniform(x - spread, x)
         ask = bid + spread
-        markets.append((bid,ask))
+        markets.append((vb, bid,ask, va))
     print(markets)
     return markets
     
     
 
 def hedge(x):
+    """
+    Given the 'true' value of the market, give the trader
+    the opportunity to hedge his position by trading
+    on available markets or by simply betting
+
+    :param x: the true value of the market
+    """
     global pnl
     print('Want to hedge?')
     ans = input()
@@ -51,12 +92,14 @@ def hedge(x):
             number = int(input())
             print('Buy or sell?')
             ans = input()
+            print('What size ?')
+            size = int(input())
             if ans == 'buy':
-                buy(x, markets[number][1])
-                print('You bought at', markets[number][1])
+                buy(x, markets[number][2], size)
+                print('You bought', size,'at', markets[number][2])
             else:
-                sell(x, markets[number][0])
-                print('You sold at', markets[number][0])
+                sell(x, markets[number][1], size)
+                print('You sold', size, 'at', markets[number][1])
                 
         print('Want to bet?')
         ans = input()
@@ -71,17 +114,30 @@ def hedge(x):
 
             
 def market(utility):
+    """
+    Given an utility function to trade on, be a trader!
+    Make markets and be prepared to trade against others.
+
+    :param utility: a two-dimensional array comprising of a
+    text description of the market you are making and the 
+    'true' value of the parameter the market is made on
+
+    :prints the decision of other market participants on your
+    markets
+    """
     print('Make me a market on', utility[0])
-    ba  = list(map(int,input().strip().split()))[:2]
-    bid, ask = ba[0], ba[1]
+    ba  = list(map(int,input().strip().split()))[:4]
+    vb, bid, ask, va = ba[0], ba[1], ba[2], ba[3]
     spread = ask - bid
     x = utility[1]
     dec = uniform(0, spread)
     if dec <= x - bid:
-        dec = sell(x, ask)
+        vol = randint(1, va)
+        dec = sell(x, ask, vol)
     else:
-        dec = buy(x, bid)
-    print(dec)
+        vol = randint(1, vb)
+        dec = buy(x, bid, vol)
+    print(dec, vol)
     hedge(x)
     
     
